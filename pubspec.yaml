@@ -25,6 +25,8 @@ dependencies:
   file_picker: ^10.1.9
   path: ^1.9.1
   uuid: ^4.5.1
+  provider: ^6.1.1
+  google_maps_flutter: ^2.5.0
   
   firebase_auth: ^5.5.2
   cloud_firestore: ^5.6.6
@@ -50,3 +52,21 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/fonts/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+
+    - family: Rock
+      fonts:
+        - asset: assets/fonts/IAmaRock_Free_For_Personal_Use_Only.ttf
+
+    - family: F25
+      fonts:
+        - asset: assets/fonts/F25_Bank_Printer.ttf
+
+    - family: Beans
+      fonts:
+        - asset: assets/fonts/F_ck Beans.ttf

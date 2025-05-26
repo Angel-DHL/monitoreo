@@ -154,14 +154,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         backgroundColor: Colors.green,
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(MyApp.isDarkMode.value ? Icons.dark_mode : Icons.light_mode),
-            onPressed: () {
-              MyApp.isDarkMode.value = !MyApp.isDarkMode.value;
-            },
-          ),
-        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

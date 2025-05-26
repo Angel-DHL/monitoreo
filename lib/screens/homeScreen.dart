@@ -1,22 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:monitoreo/screens/accesodenegadoScreen.dart';
 import 'package:monitoreo/screens/lista_reportes_screen.dart';
+import 'package:monitoreo/screens/perfil_screen.dart';
 import 'package:monitoreo/screens/registroViajesyserviciosOperadores.dart';
 import 'package:monitoreo/screens/registro_reporte_screen.dart';
 import 'package:monitoreo/screens/serviciosOperadorScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:monitoreo/screens/monitoreoScreen.dart';
 import 'package:monitoreo/screens/monitoreoAdminScreen.dart';
 import 'package:monitoreo/screens/loginScreen.dart';
 import 'package:monitoreo/screens/registroOperadoresScreen.dart';
 import 'package:monitoreo/screens/bitacoraOperadoresScreen.dart';
 import 'package:monitoreo/screens/viajesyserviciosScreen.dart';
-import 'package:monitoreo/screens/registroViajesyserviciosScreen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? _fotoUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarFotoPerfil();
+  }
+
+  Future<void> _cargarFotoPerfil() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).get();
+      setState(() {
+        _fotoUrl = userDoc['fotoPerfil'];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -50,6 +73,24 @@ class HomeScreen extends StatelessWidget {
             },
           ),
         ],
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: GestureDetector(
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PerfilScreen()),
+              );
+              _cargarFotoPerfil(); // Recargar imagen al volver del perfil
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              backgroundImage: _fotoUrl != null && _fotoUrl!.isNotEmpty
+                  ? NetworkImage(_fotoUrl!)
+                  : AssetImage('assets/images/user.png') as ImageProvider,
+            ),
+          ),
+        ),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -79,9 +120,7 @@ class HomeScreen extends StatelessWidget {
                         _buildButton(
                           context,
                           'Monitoreo de\nUnidades',
-                          () async {
-                            await _navigateToMonitoreo(context);
-                          },
+                          () async => await _navigateToMonitoreo(context),
                           isLandscape,
                           screenSize,
                         ),
@@ -89,9 +128,7 @@ class HomeScreen extends StatelessWidget {
                         _buildButton(
                           context,
                           'Viajes y\nServicios',
-                          () async {
-                            await _navigateToViajesYServicios(context);
-                          },
+                          () async => await _navigateToViajesYServicios(context),
                           isLandscape,
                           screenSize,
                         ),
@@ -99,9 +136,7 @@ class HomeScreen extends StatelessWidget {
                         _buildButton(
                           context,
                           'Registro de\nOperadores',
-                          () async {
-                            await _navigateToRegistroOperadores(context);
-                          },
+                          () async => await _navigateToRegistroOperadores(context),
                           isLandscape,
                           screenSize,
                         ),
@@ -109,9 +144,7 @@ class HomeScreen extends StatelessWidget {
                         _buildButton(
                           context,
                           'Servicios Operadores',
-                          () async {
-                            await _navigateToServiciosOperadores(context);
-                          },
+                          () async => await _navigateToServiciosOperadores(context),
                           isLandscape,
                           screenSize,
                         ),
@@ -119,12 +152,11 @@ class HomeScreen extends StatelessWidget {
                         _buildButton(
                           context,
                           'Reportes Unidades',
-                          () async {
-                            await _navigateToReportesUnidades(context);
-                          },
+                          () async => await _navigateToReportesUnidades(context),
                           isLandscape,
                           screenSize,
                         ),
+                        SizedBox(height: screenSize.height * 0.03),
                       ],
                     ),
                   ),
@@ -147,20 +179,11 @@ class HomeScreen extends StatelessWidget {
         rol = rol.toLowerCase();
 
         if (rol == 'admin' || rol == 'mantenimiento') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MonitoreoAdminScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => MonitoreoAdminScreen()));
         } else if (rol == 'operador') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AccesoDenegadoScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AccesoDenegadoScreen()));
         } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MonitoreoScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => MonitoreoScreen()));
         }
       }
     }
@@ -182,10 +205,7 @@ class HomeScreen extends StatelessWidget {
   Future<void> _navigateToReportesUnidades(BuildContext context) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('usuarios')
-          .doc(user.uid)
-          .get();
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).get();
 
       String? rol = userDoc['rol'];
 
@@ -193,20 +213,11 @@ class HomeScreen extends StatelessWidget {
         rol = rol.toLowerCase();
 
         if (rol == 'admin' || rol == 'vigilancia' || rol == 'mantenimiento') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RegistroReporteScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RegistroReporteScreen()));
         } else if (rol == 'operador' || rol == 'ventas') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AccesoDenegadoScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AccesoDenegadoScreen()));
         } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ListaReportesScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ListaReportesScreen()));
         }
       }
     }
@@ -215,10 +226,7 @@ class HomeScreen extends StatelessWidget {
   Future<void> _navigateToViajesYServicios(BuildContext context) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('usuarios')
-          .doc(user.uid)
-          .get();
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).get();
 
       String? rol = userDoc['rol'];
 
@@ -226,46 +234,37 @@ class HomeScreen extends StatelessWidget {
         rol = rol.toLowerCase();
 
         if (rol == 'admin' || rol == 'logistica') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RegistroViajesyserviciosOperadores()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RegistroViajesyserviciosOperadores()));
         } else if (rol == 'operador' || rol == 'vigilancia' || rol == 'mantenimiento') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AccesoDenegadoScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AccesoDenegadoScreen()));
         } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ViajesYServiciosScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ViajesYServiciosScreen()));
         }
       }
     }
   }
 
   Future<void> _navigateToServiciosOperadores(BuildContext context) async {
-  User? user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
 
-  if (user != null) {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).get();
-    
-    String? rol = userDoc['rol'];
-    String? nombre = userDoc['nombre']; 
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).get();
 
-    if (rol != null && rol.toLowerCase() == 'operador' && nombre != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ServiciosOperadorScreen(nombreOperador: nombre),
-        ),
-      );
-    } else {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => AccesoDenegadoScreen()));
+      String? rol = userDoc['rol'];
+      String? nombre = userDoc['nombre'];
+
+      if (rol != null && rol.toLowerCase() == 'operador' && nombre != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ServiciosOperadorScreen(nombreOperador: nombre),
+          ),
+        );
+      } else {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AccesoDenegadoScreen()));
+      }
     }
   }
-}
 
   Widget _buildButton(BuildContext context, String text, VoidCallback onPressed, bool isLandscape, Size screenSize) {
     return ElevatedButton(
