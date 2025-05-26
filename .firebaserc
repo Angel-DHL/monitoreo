@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "monitoreo": "monitoreo-y-mantenimiento",
+    "default": "monitoreo-y-mantenimiento"
+  },
+  "targets": {},
+  "etags": {}
+}

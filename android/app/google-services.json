@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "969024106320",
+    "project_id": "monitoreo-y-mantenimiento",
+    "storage_bucket": "monitoreo-y-mantenimiento.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969024106320:android:56f25ed52596b4521e4655",
+        "android_client_info": {
+          "package_name": "com.example.monitoreo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuZ6SA_7JVLGc7ZVHz0lpjSkCR184oah8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
