@@ -6,10 +6,13 @@ import 'package:monitoreo/screens/onboarding_screen.dart'; // 👈 Agrega esta i
 import 'package:monitoreo/theme/tema_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // 👈 Necesario para prefs
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Stripe.publishableKey = 'pk_test_51RTA9bCinwZigjPMsiE47iI9O3mklercDNJudoalFDXFFtZfOItYLPZnwGMcDrVD6VYOY0sHP1qqEbVmNzrm9j3B00TNQHh80y';
+  await Stripe.instance.applySettings();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 

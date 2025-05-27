@@ -27,6 +27,8 @@ dependencies:
   uuid: ^4.5.1
   provider: ^6.1.1
   google_maps_flutter: ^2.5.0
+  flutter_stripe: ^9.5.0
+  http: ^0.13.5
   
   firebase_auth: ^5.5.2
   cloud_firestore: ^5.6.6

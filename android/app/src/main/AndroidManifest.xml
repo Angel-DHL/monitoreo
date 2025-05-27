@@ -9,11 +9,13 @@
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:label="Monitoreo CASA"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:theme="@style/LaunchTheme"
         android:requestLegacyExternalStorage="true"> 
 
         <activity

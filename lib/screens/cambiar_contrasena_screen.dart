@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:monitoreo/screens/pago_screen.dart';
 
 class CambiarContrasenaScreen extends StatefulWidget {
   @override
@@ -77,6 +78,17 @@ class _CambiarContrasenaScreenState extends State<CambiarContrasenaScreen> {
         ),
         centerTitle: true,
         backgroundColor: Colors.green,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PagoScreen()),
+              );
+            },
+          )
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
